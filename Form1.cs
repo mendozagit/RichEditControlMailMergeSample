@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraRichEdit.API.Native;
+﻿using DevExpress.XtraRichEdit;
+using DevExpress.XtraRichEdit.API.Native;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,6 @@ namespace RichEditControlMailMergeSample
         public Form1()
         {
             InitializeComponent();
-          
         }
 
         private void LoadDocumentButton_Click(object sender, EventArgs e)
@@ -28,17 +28,21 @@ namespace RichEditControlMailMergeSample
 
         private void ShowAllFieldCodesButton_Click(object sender, EventArgs e)
         {
-
         }
 
         private void ShowMergeResultDocumentButton_Click(object sender, EventArgs e)
         {
-            richEditControl1.MailMerge(richEditControl1.Document);
+            MailMergeOptions myMergeOptions =
+                richEditControl1.Document.CreateMailMergeOptions();
+            myMergeOptions.DataSource = DataHelper.DummyRecords();
+            myMergeOptions.MergeMode = MergeMode.NewSection;
+
+            richEditControl1.MailMerge(myMergeOptions, richEditControl1.Document);
+
         }
 
         private static void AddMailMergeFields(Document document)
         {
-            
             // Find a placeholder for the FirstName field:
             DocumentRange[] nameRanges =
                 document.FindAll("FirstName", SearchOptions.WholeWord);
@@ -52,7 +56,6 @@ namespace RichEditControlMailMergeSample
                 // Create a field at the placeholder position
                 document.Fields.Create(namePosition, @"MERGEFIELD ""FirstName""");
             }
-
 
 
             // Find a placeholder for the FirstName field:
